@@ -11,7 +11,7 @@ public class HelloController {
 	private static final Logger logger = LoggerFactory.getLogger(HelloController.class);
 
     private static final String template = "Hello, my name is %s!";
-	private static final Object NAME_PROP = "hello.service.name";
+	private static final String NAME_PROP = "hello.service.name";
 
     @RequestMapping("/hello")
     public String hello() {
