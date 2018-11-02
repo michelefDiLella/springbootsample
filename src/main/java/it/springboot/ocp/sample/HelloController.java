@@ -23,7 +23,8 @@ public class HelloController {
 
     private static final String template = "Hello, my name is %s! Your message is '%s'!";
     private static final String callTemplateBad = "Hello! I am {myName} and I've been instructed to call {name} for you, but it looks like there is no {name} here D:! Better luck next time!";
-    private static final String callTemplate = "Hello! I am {myName} and I've been instructed to call {name} for you. Here is what he has to say: \"{message}\"";
+    private static final String callTemplate = "Hello! I am {myName} and I've been instructed to call {name} for you. Here is what he has to say: '{message}'";
+    private static final String callTemplateSame = "Hello! I am {myName} and I've been instructed to call {name} for you. Oh, nut that's me!! Here is what I have to say: '{message}'";
     private static final String urlTemplate = "http://%s/hello?message={message}";
 
     private static final String NAME_PROP = "hello.service.name";
@@ -63,7 +64,7 @@ public class HelloController {
 		if (StringUtils.isEmpty(serviceName)) {
 			ServiceResp negResp = new ServiceResp();
 			negResp.setServiceName("");
-			negResp.setMessage(callTemplateBad.replace("\\{myName\\}", service).replaceAll("\\{name\\}", name));
+			negResp.setMessage(callTemplateBad.replace("{myName}", service).replaceAll("\\{name\\}", name));
 			return negResp;
 		}
 		RestTemplate restTemplate = new RestTemplate();
@@ -77,12 +78,16 @@ public class HelloController {
 			e.printStackTrace();
 			ServiceResp negResp = new ServiceResp();
 			negResp.setServiceName("");
-			negResp.setMessage(callTemplateBad.replace("\\{myName\\}", service).replaceAll("\\{name\\}", name));
+			negResp.setMessage(callTemplateBad.replace("{myName}", service).replaceAll("\\{name\\}", name));
 			return negResp;
 		}
 
 		String respMsg = resp.getMessage();
-		resp.setMessage(callTemplate.replace("\\{myName\\}", service).replaceAll("\\{name\\}", name).replace("\\{message\\}", respMsg));
+		if (service.equalsIgnoreCase(name)) {
+			resp.setMessage(callTemplateSame.replace("{myName}", service).replaceAll("\\{name\\}", name).replace("{message}", respMsg));
+		} else {
+			resp.setMessage(callTemplate.replace("{myName}", service).replaceAll("\\{name\\}", name).replace("{message}", respMsg));
+		}
 		logger.info(resp.toString());
 
 		return resp;
