@@ -75,7 +75,10 @@ public class HelloController {
 			resp = restTemplate.getForObject(String.format(urlTemplate, serviceName), ServiceResp.class, paramMap);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			ServiceResp negResp = new ServiceResp();
+			negResp.setServiceName("");
+			negResp.setMessage(callTemplateBad.replace("{myName}", service).replaceAll("{name}", name));
+			return negResp;
 		}
 
 		String respMsg = resp.getMessage();
