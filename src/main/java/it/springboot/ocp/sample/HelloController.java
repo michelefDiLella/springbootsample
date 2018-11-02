@@ -63,7 +63,7 @@ public class HelloController {
 		if (StringUtils.isEmpty(serviceName)) {
 			ServiceResp negResp = new ServiceResp();
 			negResp.setServiceName("");
-			negResp.setMessage(callTemplateBad.replace("{myName}", service).replaceAll("{name}", name));
+			negResp.setMessage(callTemplateBad.replace("\\{myName\\}", service).replaceAll("\\{name\\}", name));
 			return negResp;
 		}
 		RestTemplate restTemplate = new RestTemplate();
@@ -77,12 +77,12 @@ public class HelloController {
 			e.printStackTrace();
 			ServiceResp negResp = new ServiceResp();
 			negResp.setServiceName("");
-			negResp.setMessage(callTemplateBad.replace("{myName}", service).replaceAll("{name}", name));
+			negResp.setMessage(callTemplateBad.replace("\\{myName\\}", service).replaceAll("\\{name\\}", name));
 			return negResp;
 		}
 
 		String respMsg = resp.getMessage();
-		resp.setMessage(callTemplate.replace("{myName}", service).replaceAll("{name}", name).replace("{message}", respMsg));
+		resp.setMessage(callTemplate.replace("\\{myName\\}", service).replaceAll("\\{name\\}", name).replace("\\{message\\}", respMsg));
 		logger.info(resp.toString());
 
 		return resp;
@@ -100,7 +100,7 @@ public class HelloController {
 		} if (urlTemplate != null) {
 			serviceName = urlTemplate.replace(SERVICE_PLACEHOLDER, name.toLowerCase());
 		} else {
-			throw new RuntimeException("You must specify one of hello.services.file or hello.service.url.template");
+			throw new RuntimeException("You must specify one of " + SERVICES_FILE + " or " + SERVICE_URL_TEMPLATE);
 		}
 
 		return serviceName;
